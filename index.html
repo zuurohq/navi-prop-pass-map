@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Evaluation Pass Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#f2efe8; --panel:#fffdf9; --panel-2:#f7f4ed;
+  --ink:#16201f; --ink-soft:#4a5c5b; --ink-faint:#7d8d8c;
+  --line:#e2ddd2; --line-soft:#ece7dc;
+  --accent:#0d6b66; --accent-ink:#ffffff;
+  --h-none:#e7e2d7; --h-zero:#8f3f39; --h-low:#b0603c; --h-mid:#c79240; --h-ok:#5c8a63; --h-good:#2b7f72; --h-top:#125f5b;
+  --hot-ink:#fffdf9;
+  --shadow:0 1px 2px rgba(20,30,30,.06), 0 8px 24px rgba(20,30,30,.05);
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0e1517; --panel:#161f21; --panel-2:#1b2528;
+    --ink:#e9efee; --ink-soft:#a7bab8; --ink-faint:#748785;
+    --line:#263235; --line-soft:#1f2b2d;
+    --accent:#4ecdc4; --accent-ink:#08201f;
+    --h-none:#1d2729; --h-zero:#7e332e; --h-low:#9c5233; --h-mid:#b5832f; --h-ok:#4b7b55; --h-good:#1f7268; --h-top:#0f5e59;
+    --hot-ink:#f4faf9;
+    --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 26px rgba(0,0,0,.28);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0e1517; --panel:#161f21; --panel-2:#1b2528;
+  --ink:#e9efee; --ink-soft:#a7bab8; --ink-faint:#748785;
+  --line:#263235; --line-soft:#1f2b2d;
+  --accent:#4ecdc4; --accent-ink:#08201f;
+  --h-none:#1d2729; --h-zero:#7e332e; --h-low:#9c5233; --h-mid:#b5832f; --h-ok:#4b7b55; --h-good:#1f7268; --h-top:#0f5e59;
+  --hot-ink:#f4faf9;
+  --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 26px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:"IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size:15px; line-height:1.5; padding-inline:16px; padding-block:0 40px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:760px; margin:0 auto}
+header{padding-block:22px 14px}
+.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 6px}
+h1{font-size:26px; line-height:1.15; margin:0 0 8px; letter-spacing:-.01em; text-wrap:balance}
+.sub{margin:0; color:var(--ink-soft); font-size:14px; max-width:62ch}
+.stats{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+.stat{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:8px 11px; flex:1 1 118px}
+.stat b{display:block; font-family:"IBM Plex Mono",monospace; font-size:17px; font-weight:600; letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+.stat span{display:block; font-size:11px; color:var(--ink-faint); letter-spacing:.03em}
+.legend{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin:16px 0 4px; font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--ink-faint)}
+.swatch{width:20px; height:12px; border-radius:3px; display:inline-block}
+.controls{display:flex; gap:6px; flex-wrap:wrap; margin:14px 0 6px}
+.chip{appearance:none; font:inherit; font-size:12.5px; padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:var(--panel); color:var(--ink-soft); cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--accent-ink); font-weight:500}
+.chip:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.firm{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:13px 13px 11px; margin-top:10px; box-shadow:var(--shadow)}
+.firm.dim{opacity:.62}
+.fhead{display:flex; gap:10px; align-items:baseline; justify-content:space-between}
+.fname{font-size:15px; font-weight:600; margin:0; letter-spacing:-.005em}
+.fplan{display:block; font-weight:400; font-size:12.5px; color:var(--ink-faint); margin-top:1px}
+.rate{font-family:"IBM Plex Mono",monospace; font-size:19px; font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap}
+.rate small{font-size:11px; font-weight:400; color:var(--ink-faint); display:block; text-align:right; margin-top:-2px}
+.rules{display:flex; flex-wrap:wrap; gap:5px; margin:9px 0 10px}
+.tag{font-family:"IBM Plex Mono",monospace; font-size:10.5px; padding:3px 7px; border-radius:5px; background:var(--panel-2); color:var(--ink-soft); border:1px solid var(--line-soft); white-space:nowrap}
+.tag.warn{color:var(--h-low); border-color:color-mix(in srgb, var(--h-low) 35%, transparent)}
+.tag.unver{color:var(--h-mid); border-color:color-mix(in srgb, var(--h-mid) 40%, transparent)}
+.grid{display:grid; grid-template-columns:26px repeat(12, minmax(0,1fr)); gap:3px; align-items:center}
+.mh{font-family:"IBM Plex Mono",monospace; font-size:9px; color:var(--ink-faint); text-align:center; letter-spacing:.02em}
+.yr{font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--ink-faint); font-variant-numeric:tabular-nums}
+.cell{aspect-ratio:1/1; border-radius:4px; background:var(--h-none); display:flex; align-items:center; justify-content:center;
+  font-family:"IBM Plex Mono",monospace; font-size:9px; font-variant-numeric:tabular-nums; color:var(--hot-ink); letter-spacing:-.04em}
+.cell.empty{color:transparent}
+.foot{margin-top:26px; padding-top:16px; border-top:1px solid var(--line); color:var(--ink-soft); font-size:13.5px}
+.foot h2{font-size:14px; margin:0 0 8px; letter-spacing:.01em}
+.foot ul{margin:0; padding-left:18px} .foot li{margin-bottom:6px}
+.foot b{color:var(--ink)}
+@media (max-width:420px){
+  h1{font-size:23px} .grid{grid-template-columns:22px repeat(12, minmax(0,1fr)); gap:2px}
+  .cell{font-size:8px; border-radius:3px} .firm{padding:11px 10px 9px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <p class="eyebrow">ZQ PF NAVI v1.3 &middot; MNQ 1-minute</p>
+  <h1>Evaluation Pass Map</h1>
+  <p class="sub">How often a 30-day evaluation would have passed, by the month the attempt started. One attempt begins every trading day, on 8 contracts with a $1,000 daily loss limit.</p>
+  <div class="stats" id="stats"></div>
+  <div class="legend">
+    <span>Pass rate</span>
+    <span class="swatch" style="background:var(--h-zero)"></span><span>0%</span>
+    <span class="swatch" style="background:var(--h-low)"></span><span>1&ndash;15</span>
+    <span class="swatch" style="background:var(--h-mid)"></span><span>16&ndash;32</span>
+    <span class="swatch" style="background:var(--h-ok)"></span><span>33&ndash;49</span>
+    <span class="swatch" style="background:var(--h-good)"></span><span>50&ndash;74</span>
+    <span class="swatch" style="background:var(--h-top)"></span><span>75+</span>
+  </div>
+  <div class="controls">
+    <button class="chip" id="s-rate" aria-pressed="true">Best first</button>
+    <button class="chip" id="s-name" aria-pressed="false">By firm</button>
+    <button class="chip" id="s-only" aria-pressed="false">Hide weak plans</button>
+  </div>
+</header>
+<main id="list"></main>
+<section class="foot">
+  <h2>Reading this map</h2>
+  <ul>
+    <li><b>33% is the target.</b> Green cells mean an evaluation started that month passed at least a third of the time. Amber and brown months are the ones to avoid buying into.</li>
+    <li><b>Attempts overlap.</b> A new attempt starts every trading day and each runs 30 days, so a strong or weak stretch is counted many times. Treat a single cell as a hint, not a measurement.</li>
+    <li><b>The rules decide the outcome, not the brand.</b> Plans with no consistency rule and a daily limit above about $1,000 sit near 31%. A 40&ndash;50% consistency rule roughly halves that, and a $500 daily limit ends it.</li>
+    <li><b>Grey chips flag rules taken from third-party sources.</b> Confirm those on the firm's own dashboard before paying for an account.</li>
+    <li><b>This is backtest history, not a forecast.</b> The whole window is the strategy's own tuning period, so the forward test is what settles it.</li>
+  </ul>
+</section>
+</div>
+<script id="data" type="application/json">{"build":"ZQ PF NAVI v1.3, 8 contracts, $1,000 daily limit","window":"2023-09-18..2026-09-17 (TradingView 1-minute deep history)","positions":934,"net":62755,"firms":[{"k":"FXIFY_50K","n":"FXIFY Futures - 50K","r":0.443,"a":623,"p":276,"m":{"2023-09":[3,9],"2023-10":[1,19],"2023-11":[0,19],"2023-12":[4,18],"2024-01":[1,19],"2024-02":[16,16],"2024-03":[8,17],"2024-04":[0,15],"2024-05":[4,19],"2024-06":[5,15],"2024-07":[0,18],"2024-08":[13,15],"2024-09":[18,18],"2024-10":[21,21],"2024-11":[2,18],"2024-12":[5,18],"2025-01":[11,19],"2025-02":[15,15],"2025-03":[19,20],"2025-04":[0,15],"2025-05":[8,19],"2025-06":[15,19],"2025-07":[0,18],"2025-08":[2,15],"2025-09":[20,20],"2025-10":[4,19],"2025-11":[11,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[4,13],"2026-03":[12,17],"2026-04":[15,18],"2026-05":[10,19],"2026-06":[9,16],"2026-07":[4,14],"2026-08":[9,17],"2026-09":[7,7]},"tgt":3000,"dd":5000,"ddt":"eod","dll":2500,"c":null,"md":5,"mi":40,"cf":"third party; the $5,000 drawdown is unusually wide and must be confirmed before buying"},{"k":"APEX_EOD","n":"Apex Trader Funding - Standard / No Activation EOD 50K","r":0.306,"a":624,"p":191,"m":{"2023-09":[3,9],"2023-10":[1,19],"2023-11":[0,19],"2023-12":[4,18],"2024-01":[1,19],"2024-02":[6,16],"2024-03":[7,17],"2024-04":[0,15],"2024-05":[4,19],"2024-06":[5,15],"2024-07":[2,18],"2024-08":[11,15],"2024-09":[18,18],"2024-10":[21,21],"2024-11":[2,18],"2024-12":[0,18],"2025-01":[6,19],"2025-02":[4,15],"2025-03":[11,20],"2025-04":[0,15],"2025-05":[6,19],"2025-06":[15,19],"2025-07":[0,18],"2025-08":[2,15],"2025-09":[12,20],"2025-10":[2,19],"2025-11":[4,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[3,13],"2026-03":[3,17],"2026-04":[16,18],"2026-05":[5,19],"2026-06":[6,16],"2026-07":[3,14],"2026-08":[3,17],"2026-09":[5,8]},"tgt":3000,"dd":2000,"ddt":"eod","dll":1000,"c":null,"md":1,"mi":60,"cf":"verified"},{"k":"TRADEIFY_GROWTH","n":"Tradeify - Growth 50K","r":0.306,"a":624,"p":191,"m":{"2023-09":[3,9],"2023-10":[1,19],"2023-11":[0,19],"2023-12":[4,18],"2024-01":[1,19],"2024-02":[6,16],"2024-03":[7,17],"2024-04":[0,15],"2024-05":[4,19],"2024-06":[5,15],"2024-07":[2,18],"2024-08":[11,15],"2024-09":[18,18],"2024-10":[21,21],"2024-11":[2,18],"2024-12":[0,18],"2025-01":[6,19],"2025-02":[4,15],"2025-03":[11,20],"2025-04":[0,15],"2025-05":[6,19],"2025-06":[15,19],"2025-07":[0,18],"2025-08":[2,15],"2025-09":[12,20],"2025-10":[2,19],"2025-11":[4,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[3,13],"2026-03":[3,17],"2026-04":[16,18],"2026-05":[5,19],"2026-06":[6,16],"2026-07":[3,14],"2026-08":[3,17],"2026-09":[5,8]},"tgt":3000,"dd":2000,"ddt":"eod","dll":1250,"c":null,"md":1,"mi":40,"cf":"verified"},{"k":"LUCID_PRO","n":"Lucid Trading - LucidPro 50K","r":0.306,"a":624,"p":191,"m":{"2023-09":[3,9],"2023-10":[1,19],"2023-11":[0,19],"2023-12":[4,18],"2024-01":[1,19],"2024-02":[6,16],"2024-03":[7,17],"2024-04":[0,15],"2024-05":[4,19],"2024-06":[5,15],"2024-07":[2,18],"2024-08":[11,15],"2024-09":[18,18],"2024-10":[21,21],"2024-11":[2,18],"2024-12":[0,18],"2025-01":[6,19],"2025-02":[4,15],"2025-03":[11,20],"2025-04":[0,15],"2025-05":[6,19],"2025-06":[15,19],"2025-07":[0,18],"2025-08":[2,15],"2025-09":[12,20],"2025-10":[2,19],"2025-11":[4,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[3,13],"2026-03":[3,17],"2026-04":[16,18],"2026-05":[5,19],"2026-06":[6,16],"2026-07":[3,14],"2026-08":[3,17],"2026-09":[5,8]},"tgt":3000,"dd":2000,"ddt":"eod","dll":1200,"c":null,"md":1,"mi":40,"cf":"verified"},{"k":"TOPONE_ELITE_ACCESS_50K","n":"Top One Futures - Elite Access 50K","r":0.306,"a":624,"p":191,"m":{"2023-09":[3,9],"2023-10":[1,19],"2023-11":[0,19],"2023-12":[4,18],"2024-01":[1,19],"2024-02":[6,16],"2024-03":[7,17],"2024-04":[0,15],"2024-05":[4,19],"2024-06":[5,15],"2024-07":[2,18],"2024-08":[11,15],"2024-09":[18,18],"2024-10":[21,21],"2024-11":[2,18],"2024-12":[0,18],"2025-01":[6,19],"2025-02":[4,15],"2025-03":[11,20],"2025-04":[0,15],"2025-05":[6,19],"2025-06":[15,19],"2025-07":[0,18],"2025-08":[2,15],"2025-09":[12,20],"2025-10":[2,19],"2025-11":[4,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[3,13],"2026-03":[3,17],"2026-04":[16,18],"2026-05":[5,19],"2026-06":[6,16],"2026-07":[3,14],"2026-08":[3,17],"2026-09":[5,8]},"tgt":3000,"dd":2000,"ddt":"eod","dll":null,"c":null,"md":1,"mi":30,"cf":"verified (both sources agree)"},{"k":"TRADINGPIT_50K","n":"The Trading Pit - Futures 50K","r":0.306,"a":624,"p":191,"m":{"2023-09":[3,9],"2023-10":[1,19],"2023-11":[0,19],"2023-12":[4,18],"2024-01":[1,19],"2024-02":[6,16],"2024-03":[7,17],"2024-04":[0,15],"2024-05":[4,19],"2024-06":[5,15],"2024-07":[2,18],"2024-08":[11,15],"2024-09":[18,18],"2024-10":[21,21],"2024-11":[2,18],"2024-12":[0,18],"2025-01":[6,19],"2025-02":[4,15],"2025-03":[11,20],"2025-04":[0,15],"2025-05":[6,19],"2025-06":[15,19],"2025-07":[0,18],"2025-08":[2,15],"2025-09":[12,20],"2025-10":[2,19],"2025-11":[4,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[3,13],"2026-03":[3,17],"2026-04":[16,18],"2026-05":[5,19],"2026-06":[6,16],"2026-07":[3,14],"2026-08":[3,17],"2026-09":[5,8]},"tgt":3000,"dd":2000,"ddt":"eod","dll":null,"c":null,"md":1,"mi":40,"cf":"third party; the daily pause amount is not confirmed"},{"k":"FUTURESELITE_PRIME_50K","n":"Futures Elite - Prime 50K","r":0.306,"a":624,"p":191,"m":{"2023-09":[3,9],"2023-10":[1,19],"2023-11":[0,19],"2023-12":[4,18],"2024-01":[1,19],"2024-02":[6,16],"2024-03":[7,17],"2024-04":[0,15],"2024-05":[4,19],"2024-06":[5,15],"2024-07":[2,18],"2024-08":[11,15],"2024-09":[18,18],"2024-10":[21,21],"2024-11":[2,18],"2024-12":[0,18],"2025-01":[6,19],"2025-02":[4,15],"2025-03":[11,20],"2025-04":[0,15],"2025-05":[6,19],"2025-06":[15,19],"2025-07":[0,18],"2025-08":[2,15],"2025-09":[12,20],"2025-10":[2,19],"2025-11":[4,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[3,13],"2026-03":[3,17],"2026-04":[16,18],"2026-05":[5,19],"2026-06":[6,16],"2026-07":[3,14],"2026-08":[3,17],"2026-09":[5,8]},"tgt":3000,"dd":2000,"ddt":"eod","dll":null,"c":null,"md":1,"mi":40,"cf":"third party; the firm's pricing table did not render"},{"k":"ELITE_EOD_50K","n":"Elite Trader Funding - End of Day 50K","r":0.286,"a":623,"p":178,"m":{"2023-09":[3,9],"2023-10":[1,19],"2023-11":[0,19],"2023-12":[4,18],"2024-01":[1,19],"2024-02":[6,16],"2024-03":[7,17],"2024-04":[0,15],"2024-05":[4,19],"2024-06":[4,15],"2024-07":[0,18],"2024-08":[11,15],"2024-09":[18,18],"2024-10":[21,21],"2024-11":[2,18],"2024-12":[0,18],"2025-01":[6,19],"2025-02":[4,15],"2025-03":[9,20],"2025-04":[0,15],"2025-05":[5,19],"2025-06":[15,19],"2025-07":[0,18],"2025-08":[2,15],"2025-09":[12,20],"2025-10":[1,19],"2025-11":[4,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[3,13],"2026-03":[3,17],"2026-04":[15,18],"2026-05":[5,19],"2026-06":[5,16],"2026-07":[0,14],"2026-08":[3,17],"2026-09":[4,7]},"tgt":3000,"dd":2000,"ddt":"eod","dll":1100,"c":null,"md":5,"mi":80,"cf":"third party for the numbers; the site shows them only in a calculator"},{"k":"FFF_EOD_50K","n":"Funded Futures Family - 50K EOD plan","r":0.221,"a":624,"p":138,"m":{"2023-09":[0,9],"2023-10":[0,19],"2023-11":[0,19],"2023-12":[3,18],"2024-01":[1,19],"2024-02":[4,16],"2024-03":[6,17],"2024-04":[0,15],"2024-05":[4,19],"2024-06":[4,15],"2024-07":[2,18],"2024-08":[6,15],"2024-09":[11,18],"2024-10":[14,21],"2024-11":[2,18],"2024-12":[0,18],"2025-01":[5,19],"2025-02":[3,15],"2025-03":[10,20],"2025-04":[0,15],"2025-05":[3,19],"2025-06":[15,19],"2025-07":[0,18],"2025-08":[2,15],"2025-09":[8,20],"2025-10":[2,19],"2025-11":[3,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[3,13],"2026-03":[3,17],"2026-04":[9,18],"2026-05":[4,19],"2026-06":[2,16],"2026-07":[2,14],"2026-08":[3,17],"2026-09":[4,8]},"tgt":3000,"dd":1500,"ddt":"eod","dll":null,"c":null,"md":1,"mi":40,"cf":"verified (independent table)"},{"k":"LUCID_FLEX","n":"Lucid Trading - LucidFlex 50K","r":0.184,"a":621,"p":114,"m":{"2023-09":[0,9],"2023-10":[0,19],"2023-11":[0,19],"2023-12":[2,18],"2024-01":[0,19],"2024-02":[0,16],"2024-03":[4,17],"2024-04":[0,15],"2024-05":[4,19],"2024-06":[0,15],"2024-07":[0,18],"2024-08":[9,15],"2024-09":[18,18],"2024-10":[18,21],"2024-11":[1,18],"2024-12":[0,18],"2025-01":[0,19],"2025-02":[0,15],"2025-03":[9,20],"2025-04":[0,15],"2025-05":[4,19],"2025-06":[14,19],"2025-07":[0,18],"2025-08":[0,15],"2025-09":[12,20],"2025-10":[1,19],"2025-11":[0,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[0,13],"2026-03":[1,17],"2026-04":[14,18],"2026-05":[1,19],"2026-06":[0,16],"2026-07":[0,14],"2026-08":[0,17],"2026-09":[2,5]},"tgt":3000,"dd":2000,"ddt":"eod","dll":null,"c":50,"md":2,"mi":40,"cf":"verified"},{"k":"BLUSKY_LAUNCH","n":"BluSky - Launch 50K","r":0.184,"a":621,"p":114,"m":{"2023-09":[0,9],"2023-10":[0,19],"2023-11":[0,19],"2023-12":[2,18],"2024-01":[0,19],"2024-02":[0,16],"2024-03":[4,17],"2024-04":[0,15],"2024-05":[4,19],"2024-06":[0,15],"2024-07":[0,18],"2024-08":[9,15],"2024-09":[18,18],"2024-10":[18,21],"2024-11":[1,18],"2024-12":[0,18],"2025-01":[0,19],"2025-02":[0,15],"2025-03":[9,20],"2025-04":[0,15],"2025-05":[4,19],"2025-06":[14,19],"2025-07":[0,18],"2025-08":[0,15],"2025-09":[12,20],"2025-10":[1,19],"2025-11":[0,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[0,13],"2026-03":[1,17],"2026-04":[14,18],"2026-05":[1,19],"2026-06":[0,16],"2026-07":[0,14],"2026-08":[0,17],"2026-09":[2,5]},"tgt":3000,"dd":2000,"ddt":"eod","dll":null,"c":50,"md":2,"mi":50,"cf":"verified"},{"k":"TAKEPROFIT_50K","n":"Take Profit Trader - 1-Step 50K (PRO)","r":0.184,"a":621,"p":114,"m":{"2023-09":[0,9],"2023-10":[0,19],"2023-11":[0,19],"2023-12":[2,18],"2024-01":[0,19],"2024-02":[0,16],"2024-03":[4,17],"2024-04":[0,15],"2024-05":[4,19],"2024-06":[0,15],"2024-07":[0,18],"2024-08":[9,15],"2024-09":[18,18],"2024-10":[18,21],"2024-11":[1,18],"2024-12":[0,18],"2025-01":[0,19],"2025-02":[0,15],"2025-03":[9,20],"2025-04":[0,15],"2025-05":[4,19],"2025-06":[14,19],"2025-07":[0,18],"2025-08":[0,15],"2025-09":[12,20],"2025-10":[1,19],"2025-11":[0,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[0,13],"2026-03":[1,17],"2026-04":[14,18],"2026-05":[1,19],"2026-06":[0,16],"2026-07":[0,14],"2026-08":[0,17],"2026-09":[2,5]},"tgt":3000,"dd":2000,"ddt":"eod","dll":null,"c":50,"md":1,"mi":60,"cf":"verified (independent table)"},{"k":"BLUEGUARDIAN_STD_50K","n":"Blue Guardian Futures - Standard 1-Step 50K","r":0.184,"a":621,"p":114,"m":{"2023-09":[0,9],"2023-10":[0,19],"2023-11":[0,19],"2023-12":[2,18],"2024-01":[0,19],"2024-02":[0,16],"2024-03":[4,17],"2024-04":[0,15],"2024-05":[4,19],"2024-06":[0,15],"2024-07":[0,18],"2024-08":[9,15],"2024-09":[18,18],"2024-10":[18,21],"2024-11":[1,18],"2024-12":[0,18],"2025-01":[0,19],"2025-02":[0,15],"2025-03":[9,20],"2025-04":[0,15],"2025-05":[4,19],"2025-06":[14,19],"2025-07":[0,18],"2025-08":[0,15],"2025-09":[12,20],"2025-10":[1,19],"2025-11":[0,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[0,13],"2026-03":[1,17],"2026-04":[14,18],"2026-05":[1,19],"2026-06":[0,16],"2026-07":[0,14],"2026-08":[0,17],"2026-09":[2,5]},"tgt":3000,"dd":2000,"ddt":"eod","dll":1250,"c":50,"md":1,"mi":40,"cf":"mixed: drawdown and daily limit from the firm's help centre, the evaluation consistency from reviews"},{"k":"FUNDEDNEXT_BOLT_50K","n":"FundedNext Futures - Bolt 50K","r":0.116,"a":619,"p":72,"m":{"2023-09":[0,9],"2023-10":[0,19],"2023-11":[0,19],"2023-12":[0,18],"2024-01":[0,19],"2024-02":[0,16],"2024-03":[1,17],"2024-04":[0,15],"2024-05":[2,19],"2024-06":[0,15],"2024-07":[0,18],"2024-08":[8,15],"2024-09":[18,18],"2024-10":[9,21],"2024-11":[0,18],"2024-12":[0,18],"2025-01":[0,19],"2025-02":[0,15],"2025-03":[1,20],"2025-04":[0,15],"2025-05":[4,19],"2025-06":[10,19],"2025-07":[0,18],"2025-08":[0,15],"2025-09":[7,20],"2025-10":[0,19],"2025-11":[0,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[0,13],"2026-03":[0,17],"2026-04":[12,18],"2026-05":[0,19],"2026-06":[0,16],"2026-07":[0,14],"2026-08":[0,17],"2026-09":[0,3]},"tgt":3000,"dd":2000,"ddt":"eod","dll":1000,"c":40,"md":1,"mi":9,"cf":"third party; the firm's own comparison page did not show futures numbers"},{"k":"HOLAPRIME_50K","n":"Hola Prime Futures - 1-Step 50K","r":0.116,"a":619,"p":72,"m":{"2023-09":[0,9],"2023-10":[0,19],"2023-11":[0,19],"2023-12":[0,18],"2024-01":[0,19],"2024-02":[0,16],"2024-03":[1,17],"2024-04":[0,15],"2024-05":[2,19],"2024-06":[0,15],"2024-07":[0,18],"2024-08":[8,15],"2024-09":[18,18],"2024-10":[9,21],"2024-11":[0,18],"2024-12":[0,18],"2025-01":[0,19],"2025-02":[0,15],"2025-03":[1,20],"2025-04":[0,15],"2025-05":[4,19],"2025-06":[10,19],"2025-07":[0,18],"2025-08":[0,15],"2025-09":[7,20],"2025-10":[0,19],"2025-11":[0,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[0,13],"2026-03":[0,17],"2026-04":[12,18],"2026-05":[0,19],"2026-06":[0,16],"2026-07":[0,14],"2026-08":[0,17],"2026-09":[0,3]},"tgt":3000,"dd":2000,"ddt":"eod","dll":null,"c":40,"md":1,"mi":30,"cf":"verified (firm's own rules page)"},{"k":"FFF_VELOCITY_50K","n":"Funded Futures Family - Velocity 50K","r":0.115,"a":619,"p":71,"m":{"2023-09":[0,9],"2023-10":[0,19],"2023-11":[0,19],"2023-12":[0,18],"2024-01":[0,19],"2024-02":[0,16],"2024-03":[1,17],"2024-04":[0,15],"2024-05":[0,19],"2024-06":[0,15],"2024-07":[0,18],"2024-08":[8,15],"2024-09":[18,18],"2024-10":[9,21],"2024-11":[0,18],"2024-12":[0,18],"2025-01":[0,19],"2025-02":[0,15],"2025-03":[1,20],"2025-04":[0,15],"2025-05":[4,19],"2025-06":[10,19],"2025-07":[0,18],"2025-08":[0,15],"2025-09":[8,20],"2025-10":[0,19],"2025-11":[0,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[0,13],"2026-03":[0,17],"2026-04":[12,18],"2026-05":[0,19],"2026-06":[0,16],"2026-07":[0,14],"2026-08":[0,17],"2026-09":[0,3]},"tgt":4000,"dd":2250,"ddt":"intraday","dll":null,"c":40,"md":3,"mi":50,"cf":"verified (both sources agree)"},{"k":"TOPONE_ELITE_DAILY_50K","n":"Top One Futures - Elite Daily 50K","r":0.003,"a":627,"p":2,"m":{"2023-09":[0,9],"2023-10":[0,19],"2023-11":[0,19],"2023-12":[0,18],"2024-01":[0,19],"2024-02":[0,16],"2024-03":[0,17],"2024-04":[0,15],"2024-05":[0,19],"2024-06":[0,15],"2024-07":[0,18],"2024-08":[0,15],"2024-09":[1,18],"2024-10":[0,21],"2024-11":[0,18],"2024-12":[0,18],"2025-01":[0,19],"2025-02":[0,15],"2025-03":[0,20],"2025-04":[0,15],"2025-05":[0,19],"2025-06":[0,19],"2025-07":[0,18],"2025-08":[0,15],"2025-09":[1,20],"2025-10":[0,19],"2025-11":[0,15],"2025-12":[0,14],"2026-01":[0,20],"2026-02":[0,13],"2026-03":[0,17],"2026-04":[0,18],"2026-05":[0,19],"2026-06":[0,16],"2026-07":[0,14],"2026-08":[0,17],"2026-09":[0,11]},"tgt":3000,"dd":2000,"ddt":"eod","dll":500,"c":40,"md":1,"mi":30,"cf":"verified (both sources agree; the $500 daily limit is from the firm's own page)"}]}</script>
+<script>
+(function(){
+  var D = JSON.parse(document.getElementById('data').textContent);
+  var MON = ['J','F','M','A','M','J','J','A','S','O','N','D'];
+  var years = (function(){ var s = {}; D.firms.forEach(function(f){ Object.keys(f.m).forEach(function(k){ s[k.slice(0,4)] = 1; }); }); return Object.keys(s).sort(); })();
+
+  function band(r){
+    if (r === null) return 'var(--h-none)';
+    if (r === 0) return 'var(--h-zero)';
+    if (r < 0.16) return 'var(--h-low)';
+    if (r < 0.33) return 'var(--h-mid)';
+    if (r < 0.50) return 'var(--h-ok)';
+    if (r < 0.75) return 'var(--h-good)';
+    return 'var(--h-top)';
+  }
+  function money(n){ return '$' + n.toLocaleString('en-US'); }
+
+  var stats = document.getElementById('stats');
+  var best = D.firms[0];
+  [[Math.round(best.r*100) + '%', 'best plan: ' + best.n.split(' - ')[0]],
+   [D.firms.filter(function(f){ return f.r >= 0.28; }).length + ' of ' + D.firms.length, 'plans at 28% or better'],
+   [D.positions.toLocaleString('en-US'), 'trades tested'],
+   [money(D.net), 'net, 3 years, 8 contracts']].forEach(function(p){
+    var d = document.createElement('div'); d.className = 'stat';
+    var b = document.createElement('b'); b.textContent = p[0];
+    var s = document.createElement('span'); s.textContent = p[1];
+    d.appendChild(b); d.appendChild(s); stats.appendChild(d);
+  });
+
+  var list = document.getElementById('list');
+  function tag(text, cls){ var s = document.createElement('span'); s.className = 'tag' + (cls ? ' ' + cls : ''); s.textContent = text; return s; }
+
+  function render(order, hideWeak){
+    var firms = D.firms.slice();
+    if (order === 'name') firms.sort(function(a,b){ return a.n.localeCompare(b.n); });
+    else firms.sort(function(a,b){ return b.r - a.r; });
+    list.textContent = '';
+    firms.forEach(function(f){
+      if (hideWeak && f.r < 0.20) return;
+      var card = document.createElement('article'); card.className = 'firm' + (f.r < 0.20 ? ' dim' : '');
+      var head = document.createElement('div'); head.className = 'fhead';
+      var h = document.createElement('h2'); h.className = 'fname';
+      var parts = f.n.split(' - ');
+      h.textContent = parts[0];
+      var plan = document.createElement('span'); plan.className = 'fplan'; plan.textContent = parts.slice(1).join(' - ') || '50K';
+      h.appendChild(plan);
+      var rate = document.createElement('div'); rate.className = 'rate';
+      rate.textContent = Math.round(f.r * 100) + '%';
+      var sm = document.createElement('small'); sm.textContent = f.p + ' of ' + f.a;
+      rate.appendChild(sm);
+      head.appendChild(h); head.appendChild(rate); card.appendChild(head);
+
+      var rules = document.createElement('div'); rules.className = 'rules';
+      rules.appendChild(tag('target ' + money(f.tgt)));
+      rules.appendChild(tag('DD ' + money(f.dd) + ' ' + (f.ddt === 'intraday' ? 'intraday' : f.ddt === 'static' ? 'static' : 'EOD')));
+      rules.appendChild(tag(f.dll ? 'daily ' + money(f.dll) : 'no daily limit', f.dll && f.dll <= 600 ? 'warn' : ''));
+      if (f.c) rules.appendChild(tag('consistency ' + f.c + '%', 'warn'));
+      if (f.md && f.md > 1) rules.appendChild(tag(f.md + ' day minimum'));
+      if (f.mi) rules.appendChild(tag(f.mi + ' micros max', f.mi < 8 ? 'warn' : ''));
+      if (/third party|mixed/i.test(f.cf)) rules.appendChild(tag('rules unconfirmed', 'unver'));
+      card.appendChild(rules);
+
+      var grid = document.createElement('div'); grid.className = 'grid';
+      var corner = document.createElement('span'); corner.className = 'mh'; grid.appendChild(corner);
+      MON.forEach(function(m){ var s = document.createElement('span'); s.className = 'mh'; s.textContent = m; grid.appendChild(s); });
+      years.forEach(function(y){
+        var yl = document.createElement('span'); yl.className = 'yr'; yl.textContent = y.slice(2); grid.appendChild(yl);
+        for (var i = 1; i <= 12; i++){
+          var key = y + '-' + (i < 10 ? '0' + i : i);
+          var v = f.m[key];
+          var c = document.createElement('span');
+          var r = (v && v[1]) ? v[0] / v[1] : null;
+          c.className = 'cell' + (r === null ? ' empty' : '');
+          c.style.background = band(r);
+          c.textContent = r === null ? '-' : Math.round(r * 100);
+          c.title = key + (r === null ? ' - no attempts' : ' - ' + v[0] + ' of ' + v[1] + ' attempts passed');
+          grid.appendChild(c);
+        }
+      });
+      card.appendChild(grid);
+      list.appendChild(card);
+    });
+  }
+
+  var order = 'rate', hideWeak = false;
+  var bRate = document.getElementById('s-rate'), bName = document.getElementById('s-name'), bOnly = document.getElementById('s-only');
+  function sync(){
+    bRate.setAttribute('aria-pressed', order === 'rate');
+    bName.setAttribute('aria-pressed', order === 'name');
+    bOnly.setAttribute('aria-pressed', hideWeak);
+    render(order, hideWeak);
+  }
+  bRate.addEventListener('click', function(){ order = 'rate'; sync(); });
+  bName.addEventListener('click', function(){ order = 'name'; sync(); });
+  bOnly.addEventListener('click', function(){ hideWeak = !hideWeak; sync(); });
+  sync();
+})();
+</script>
+</body>
+</html>
