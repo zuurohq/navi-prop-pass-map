@@ -5,7 +5,7 @@ A single page with two maps for one strategy on MNQ 1-minute data (2023-09 to 20
 - **Evaluation** - how often a 30-day futures prop-firm evaluation would have passed, month by month, across 18 firm plans.
 - **Funded payouts** - what a funded account actually paid over 180 days, and how often it paid at all, across 17 plans.
 
-**Live page:** https://zuurohq.github.io/zq-pass-map/
+**Live page:** https://zuurohq.github.io/navi-prop-pass-map/
 
 **Version:** map v1.6 (18 September 2026). The page carries its own version line and a "What changed" log, because several
 figures have been corrected since the first version - most notably FXIFY, which was published at 44.8% from third-party
