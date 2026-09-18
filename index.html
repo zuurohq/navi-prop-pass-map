@@ -10,10 +10,10 @@
 <style>
 :root{
   --ground:#f2efe8; --panel:#fffdf9; --panel-2:#f7f4ed;
-  --ink:#16201f; --ink-soft:#4a5c5b; --ink-faint:#7d8d8c;
+  --ink:#16201f; --ink-soft:#4a5c5b; --ink-faint:#596c6a;
   --line:#e2ddd2; --line-soft:#ece7dc;
   --accent:#0d6b66; --accent-ink:#ffffff;
-  --h-none:#e7e2d7; --h-zero:#8f3f39; --h-low:#b0603c; --h-mid:#c79240; --h-ok:#5c8a63; --h-good:#2b7f72; --h-top:#125f5b;
+  --h-none:#e7e2d7; --h-zero:#8f3f39; --h-low:#a2542f; --h-mid:#966c1e; --h-ok:#3a6144; --h-good:#2b7f72; --h-top:#125f5b;
   --hot-ink:#fffdf9;
   --shadow:0 1px 2px rgba(20,30,30,.06), 0 8px 24px rgba(20,30,30,.05);
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
@@ -21,20 +21,20 @@
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --ground:#0e1517; --panel:#161f21; --panel-2:#1b2528;
-    --ink:#e9efee; --ink-soft:#a7bab8; --ink-faint:#748785;
+    --ink:#e9efee; --ink-soft:#a7bab8; --ink-faint:#8fa6a4;
     --line:#263235; --line-soft:#1f2b2d;
     --accent:#4ecdc4; --accent-ink:#08201f;
-    --h-none:#1d2729; --h-zero:#7e332e; --h-low:#9c5233; --h-mid:#b5832f; --h-ok:#4b7b55; --h-good:#1f7268; --h-top:#0f5e59;
+    --h-none:#1d2729; --h-zero:#7e332e; --h-low:#9c5233; --h-mid:#8f661d; --h-ok:#3a6244; --h-good:#1f7268; --h-top:#0f5e59;
     --hot-ink:#f4faf9;
     --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 26px rgba(0,0,0,.28);
   }
 }
 :root[data-theme="dark"]{
   --ground:#0e1517; --panel:#161f21; --panel-2:#1b2528;
-  --ink:#e9efee; --ink-soft:#a7bab8; --ink-faint:#748785;
+  --ink:#e9efee; --ink-soft:#a7bab8; --ink-faint:#8fa6a4;
   --line:#263235; --line-soft:#1f2b2d;
   --accent:#4ecdc4; --accent-ink:#08201f;
-  --h-none:#1d2729; --h-zero:#7e332e; --h-low:#9c5233; --h-mid:#b5832f; --h-ok:#4b7b55; --h-good:#1f7268; --h-top:#0f5e59;
+  --h-none:#1d2729; --h-zero:#7e332e; --h-low:#9c5233; --h-mid:#8f661d; --h-ok:#3a6244; --h-good:#1f7268; --h-top:#0f5e59;
   --hot-ink:#f4faf9;
   --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 26px rgba(0,0,0,.28);
 }
@@ -58,7 +58,7 @@ h1{font-size:26px; line-height:1.15; margin:0 0 8px; letter-spacing:-.01em; text
 .legend{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin:16px 0 4px; font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--ink-faint)}
 .swatch{width:20px; height:12px; border-radius:3px; display:inline-block}
 .controls{display:flex; gap:6px; flex-wrap:wrap; margin:14px 0 6px}
-.chip{appearance:none; font:inherit; font-size:12.5px; padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:var(--panel); color:var(--ink-soft); cursor:pointer}
+.chip{appearance:none; font:inherit; font-size:13px; min-height:44px; padding:8px 14px; border-radius:999px; border:1px solid var(--line); background:var(--panel); color:var(--ink-soft); cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--accent-ink); font-weight:500}
 .chip:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
 .firm{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:13px 13px 11px; margin-top:10px; box-shadow:var(--shadow)}
@@ -76,6 +76,7 @@ h1{font-size:26px; line-height:1.15; margin:0 0 8px; letter-spacing:-.01em; text
 .tag.unver{color:var(--h-mid); border-color:color-mix(in srgb, var(--h-mid) 40%, transparent)}
 .tag.fund{color:var(--accent); border-color:color-mix(in srgb, var(--accent) 38%, transparent)}
 .grid{display:grid; grid-template-columns:26px repeat(12, minmax(0,1fr)); gap:3px; align-items:center}
+.vh{position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0}
 .mh{font-family:"IBM Plex Mono",monospace; font-size:9px; color:var(--ink-faint); text-align:center; letter-spacing:.02em}
 .yr{font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--ink-faint); font-variant-numeric:tabular-nums}
 .cell{aspect-ratio:1/1; border-radius:4px; background:var(--h-none); display:flex; align-items:center; justify-content:center;
@@ -97,7 +98,7 @@ h1{font-size:26px; line-height:1.15; margin:0 0 8px; letter-spacing:-.01em; text
   <p class="eyebrow">ZQ PF NAVI v1.3 &middot; MNQ 1-minute</p>
   <h1>Evaluation Pass Map</h1>
   <p class="sub" id="sub"></p>
-  <div class="controls" role="tablist" aria-label="Stage">
+  <div class="controls" role="group" aria-label="Which stage to show">
     <button class="chip mode" id="m-eval" aria-pressed="true">Evaluation</button>
     <button class="chip mode" id="m-pay" aria-pressed="false">Funded payouts</button>
   </div>
@@ -117,7 +118,7 @@ h1{font-size:26px; line-height:1.15; margin:0 0 8px; letter-spacing:-.01em; text
     <button class="chip" id="s-only" aria-pressed="false">Hide weak plans</button>
   </div>
 </header>
-<main id="list"></main>
+<main id="list" aria-live="polite" aria-busy="false"></main>
 <section class="foot">
   <h2 id="foot-title">Reading this map</h2>
   <ul id="foot-eval">
@@ -174,21 +175,30 @@ h1{font-size:26px; line-height:1.15; margin:0 0 8px; letter-spacing:-.01em; text
     });
   }
 
-  function grid(f, years){
-    var g=document.createElement('div'); g.className='grid';
-    var corner=document.createElement('span'); corner.className='mh'; g.appendChild(corner);
-    MON.forEach(function(m){ var s=document.createElement('span'); s.className='mh'; s.textContent=m; g.appendChild(s); });
+  var MONFULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  function grid(f, years, mode){
+    var g=document.createElement('div'); g.className='grid'; g.setAttribute('role','table');
+    g.setAttribute('aria-label', (mode==='pay' ? 'Share of funded accounts paid at least once' : 'Pass rate') + ' by month, ' + f.n);
+    var hrow=document.createElement('div'); hrow.setAttribute('role','row'); hrow.style.display='contents';
+    var corner=document.createElement('span'); corner.className='mh'; corner.setAttribute('role','columnheader'); corner.appendChild(Object.assign(document.createElement('span'),{className:'vh',textContent:'Year'})); hrow.appendChild(corner);
+    MON.forEach(function(m,ix){ var s=document.createElement('span'); s.className='mh'; s.setAttribute('role','columnheader'); s.setAttribute('aria-label', MONFULL[ix]); s.textContent=m; hrow.appendChild(s); });
+    g.appendChild(hrow);
     years.forEach(function(y){
-      var yl=document.createElement('span'); yl.className='yr'; yl.textContent=y.slice(2); g.appendChild(yl);
+      var row=document.createElement('div'); row.setAttribute('role','row'); row.style.display='contents';
+      var yl=document.createElement('span'); yl.className='yr'; yl.setAttribute('role','rowheader'); yl.setAttribute('aria-label', y); yl.textContent=y.slice(2); row.appendChild(yl);
       for (var i=1;i<=12;i++){
         var key=y+'-'+(i<10?'0'+i:i), v=f.m[key], c=document.createElement('span');
         var r=(v&&v[1])?v[0]/v[1]:null;
         c.className='cell'+(r===null?' empty':'');
         c.style.background=band(r);
+        c.setAttribute('role','cell');
         c.textContent = r===null ? '-' : Math.round(r*100);
-        c.title = key + (r===null ? ' - no data' : ' - ' + v[0] + ' of ' + v[1]);
-        g.appendChild(c);
+        var what = mode==='pay' ? ' of accounts were paid' : ' of attempts passed';
+        var label = MONFULL[i-1] + ' ' + y + ': ' + (r===null ? 'no data' : Math.round(r*100) + ' per cent' + what + ', ' + v[0] + ' of ' + v[1]);
+        c.setAttribute('aria-label', label); c.title = label;
+        row.appendChild(c);
       }
+      g.appendChild(row);
     });
     return g;
   }
@@ -231,7 +241,7 @@ h1{font-size:26px; line-height:1.15; margin:0 0 8px; letter-spacing:-.01em; text
       card.appendChild(rules);
       card.appendChild(plain('In plain words: buy 10 evaluations here and about <b>' + inTen(f.r) + '</b> would have passed, each taking about <b>' +
         (f.md2 || f.medDays || '?') + ' days</b>. So budget roughly <b>' + Math.max(2, Math.round(1/Math.max(f.r,0.01))) + ' fees per pass</b>.'));
-      card.appendChild(grid(f, years));
+      card.appendChild(grid(f, years, 'eval'));
       list.appendChild(card);
     });
   }
@@ -279,7 +289,7 @@ h1{font-size:26px; line-height:1.15; margin:0 0 8px; letter-spacing:-.01em; text
       card.appendChild(plain('In plain words: fund 10 of these <b>$50,000</b> accounts and about <b>' + inTen(f.p1) + '</b> would have paid you something - usually <b>' +
         times(f.avgN) + '</b>, <b>' + money(f.avgPaid) + ' per account</b> across six months. About <b>' + Math.round(f.breach*100) +
         '%</b> of the accounts hit their loss limit before the six months were up.'));
-      card.appendChild(grid(f, years));
+      card.appendChild(grid(f, years, 'pay'));
       list.appendChild(card);
     });
   }
