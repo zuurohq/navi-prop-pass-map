@@ -238,7 +238,7 @@ h1{font-size:26px; line-height:1.15; margin:0 0 8px; letter-spacing:-.01em; text
 
   function renderPay(order, hideWeak){
     var years = yearsOf(PAY.firms);
-    sub.textContent = 'What a funded account actually paid, by the month funding started. Each account runs 180 days on 2 contracts; a cell is the share that were paid at least once.';
+    sub.textContent = 'What a $50,000 funded account actually paid, by the month funding started. Each account runs 180 days on 2 contracts; a cell is the share that were paid at least once.';
     legLabel.textContent = 'Share paid at least once';
     footTitle.textContent = 'Reading the payout map';
     footEval.hidden = true; footPay.hidden = false;
@@ -258,12 +258,13 @@ h1{font-size:26px; line-height:1.15; margin:0 0 8px; letter-spacing:-.01em; text
       var h=document.createElement('h2'); h.className='fname';
       h.textContent = f.n.replace(/ (funded|sim funded|Performance Account|earning|Elite)$/i,'');
       var plan=document.createElement('span'); plan.className='fplan';
-      plan.textContent = Math.round(f.p1*100) + '% paid at least once  ·  ' + f.avgN + ' payouts on average';
+      plan.textContent = '$50K funded  ·  ' + Math.round(f.p1*100) + '% paid at least once  ·  ' + f.avgN + ' payouts on average';
       h.appendChild(plan);
       var rate=document.createElement('div'); rate.className='rate'; rate.textContent=money(f.avgPaid);
       var sm=document.createElement('small'); sm.textContent='paid to you'; rate.appendChild(sm);
       head.appendChild(h); head.appendChild(rate); card.appendChild(head);
       var rules=document.createElement('div'); rules.className='rules';
+      rules.appendChild(tag('$50K account'));
       rules.appendChild(tag(Math.round(f.split*100)+'% split'));
       if (f.days>1) rules.appendChild(tag(f.days+' days of '+money(f.dayMin)+'+'));
       else if (f.cycleMin) rules.appendChild(tag(money(f.cycleMin)+' profit per cycle'));
@@ -275,7 +276,7 @@ h1{font-size:26px; line-height:1.15; margin:0 0 8px; letter-spacing:-.01em; text
       rules.appendChild(tag(Math.round(f.breach*100)+'% breach','warn'));
       if (/assumed|third party/i.test(f.conf)) rules.appendChild(tag('rules partly assumed','unver'));
       card.appendChild(rules);
-      card.appendChild(plain('In plain words: fund 10 accounts here and about <b>' + inTen(f.p1) + '</b> would have paid you something - usually <b>' +
+      card.appendChild(plain('In plain words: fund 10 of these <b>$50,000</b> accounts and about <b>' + inTen(f.p1) + '</b> would have paid you something - usually <b>' +
         times(f.avgN) + '</b>, <b>' + money(f.avgPaid) + ' per account</b> across six months. About <b>' + Math.round(f.breach*100) +
         '%</b> of the accounts hit their loss limit before the six months were up.'));
       card.appendChild(grid(f, years));
