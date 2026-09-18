@@ -7,7 +7,7 @@ A single page with two maps for one strategy on MNQ 1-minute data (2023-09 to 20
 
 **Live page:** https://zuurohq.github.io/zq-pass-map/
 
-**Version:** map v1.5 (18 September 2026). The page carries its own version line and a "What changed" log, because several
+**Version:** map v1.6 (18 September 2026). The page carries its own version line and a "What changed" log, because several
 figures have been corrected since the first version - most notably FXIFY, which was published at 44.8% from third-party
 rules and is 32.7% (Expert) and 3.1% (Standard) using the firm's own.
 
@@ -23,8 +23,12 @@ stated. Both are corrected here. The payout figures remain **modelled**: they as
 $100 above the starting balance and use assumed payout caps where a firm does not publish them. Treat the payout map
 as a ranking of payout rules, not a forecast.
 
-## Why there is no payout map here
+## Internal page
 
-An earlier version of this page carried a second map of funded-account payouts. An independent review found its
-assumptions unproven, so it is withheld until they are settled. The evaluation map remains, with its own corrections
-listed on the page.
+This page is for the team, not for distribution. It carries a noindex instruction and a robots file so search engines
+do not list it, but **anyone who has the link can open it** - GitHub Pages has no access control.
+
+It holds two maps. The **evaluation map** has been through two independent reviews and every figure reproduces. The
+**funded payout map** is modelled and its assumptions are not all proven: the floor lock is confirmed for 5 plans of 18,
+some payout caps are assumed, and the model withdraws the maximum as soon as it is allowed, which is what drives the
+high breach figures. Read it as a ranking of payout rules, not a forecast.
