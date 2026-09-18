@@ -7,6 +7,10 @@ A single page with two maps for one strategy on MNQ 1-minute data (2023-09 to 20
 
 **Live page:** https://zuurohq.github.io/zq-pass-map/
 
+**Version:** map v1.4 (18 September 2026). The page carries its own version line and a "What changed" log, because several
+figures have been corrected since the first version - most notably FXIFY, which was published at 44.8% from third-party
+rules and is 32.7% (Expert) and 3.1% (Standard) using the firm's own.
+
 Backtest history, not a forecast, and not advice. Firm rules change often; several of the plans shown carry rules taken
 from third-party sources and are marked "rules unconfirmed" on the page. Confirm any rule with the firm before paying
 for an account.
