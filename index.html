@@ -191,6 +191,24 @@ details.log summary:focus-visible{outline:2px solid var(--accent); outline-offse
   }
   function money(n){ return '$' + Math.round(n).toLocaleString('en-US'); }
   function tag(text, cls){ var s=document.createElement('span'); s.className='tag'+(cls?' '+cls:''); s.textContent=text; return s; }
+  // Can this strategy legally be run on this plan, and how? A pass rate says how often the
+  // firm's RULES were survived. It says nothing about whether the firm permits the strategy at
+  // all. Published 2026-09-20 under APR-20260920-200626-ca83, after a live version of this page
+  // ranked FXIFY Expert the best $50K plan while FXIFY's own help centre says Expert Advisors
+  // are not permitted -- and said nothing about it anywhere.
+  function execTags(rules, f){
+    if (f.auto === undefined) return;                 // older data file: say nothing at all
+    if (f.auto === 'permitted')        rules.appendChild(tag('automation allowed','fund'));
+    else if (f.auto === 'conditional') rules.appendChild(tag('automation only on conditions','warn'));
+    else if (f.auto === 'prohibited')  rules.appendChild(tag('NO automated trading','warn'));
+    else                               rules.appendChild(tag('automation rule not stated','unver'));
+    if (f.manual === 'permitted')        rules.appendChild(tag('by hand from alerts: allowed','fund'));
+    else if (f.manual === 'conditional') rules.appendChild(tag('by hand from alerts: unclear','unver'));
+    else if (f.manual === 'prohibited')  rules.appendChild(tag('by hand from alerts: NOT allowed','warn'));
+    if (f.maxAcc) rules.appendChild(tag('max '+f.maxAcc+' accounts', f.maxAcc<=5?'warn':''));
+    if (f.polOk === false) rules.appendChild(tag('firm pages unreachable - rules unconfirmed','unver'));
+  }
+
   function odds(x){
     if (!x) return 'none';
     if (x >= 0.15) return 'about ' + Math.round(x*10) + ' in 10';
@@ -277,23 +295,6 @@ details.log summary:focus-visible{outline:2px solid var(--accent); outline-offse
       var sm2=document.createElement('small'); sm2.textContent = f.p+' of '+f.a+' attempts';
       rate.appendChild(sm); rate.appendChild(sm2);
       head.appendChild(h); head.appendChild(rate); card.appendChild(head);
-  // Can this strategy legally be run on this plan, and how? A pass rate says how often the
-  // firm's RULES were survived. It says nothing about whether the firm permits the strategy at
-  // all. Published 2026-09-20 under APR-20260920-200626-ca83, after a live version of this page
-  // ranked FXIFY Expert the best $50K plan while FXIFY's own help centre says Expert Advisors
-  // are not permitted -- and said nothing about it anywhere.
-  function execTags(rules, f){
-    if (f.auto === undefined) return;                 // older data file: say nothing at all
-    if (f.auto === 'permitted')        rules.appendChild(tag('automation allowed','fund'));
-    else if (f.auto === 'conditional') rules.appendChild(tag('automation only on conditions','warn'));
-    else if (f.auto === 'prohibited')  rules.appendChild(tag('NO automated trading','warn'));
-    else                               rules.appendChild(tag('automation rule not stated','unver'));
-    if (f.manual === 'permitted')        rules.appendChild(tag('by hand from alerts: allowed','fund'));
-    else if (f.manual === 'conditional') rules.appendChild(tag('by hand from alerts: unclear','unver'));
-    else if (f.manual === 'prohibited')  rules.appendChild(tag('by hand from alerts: NOT allowed','warn'));
-    if (f.maxAcc) rules.appendChild(tag('max '+f.maxAcc+' accounts', f.maxAcc<=5?'warn':''));
-    if (f.polOk === false) rules.appendChild(tag('firm pages unreachable - rules unconfirmed','unver'));
-  }
 
       var rules=document.createElement('div'); rules.className='rules';
       rules.appendChild(tag('target '+money(f.tgt)));
